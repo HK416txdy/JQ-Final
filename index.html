@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>固定顶部 Header 示例</title>
+
+    <script src="lib/tailwindcss.js"></script>
+    <script src="lib/fontawesome/js/all.min.js"></script>
+    <script>
+        // Tailwind 配置
+        tailwind.config = {
+            darkMode: 'class', // 使用 'class' 策略
+            content: [],
+            theme: {
+                extend: {},
+            },
+            plugins: [],
+        }
+
+        // 在页面加载时，根据 localStorage 或系统偏好设置主题
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+
+            // 更新图标显示
+            updateThemeToggleIcons();
+        });
+
+        // 切换主题函数
+        function toggleTheme() {
+            const htmlElement = document.documentElement;
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            updateThemeToggleIcons();
+        }
+
+        // 更新主题切换按钮图标
+        function updateThemeToggleIcons() {
+            const toggleSun = document.getElementById('theme-toggle-sun');
+            const toggleMoon = document.getElementById('theme-toggle-moon');
+            const toggleSunDesktop = document.getElementById('theme-toggle-sun-desktop');
+            const toggleMoonDesktop = document.getElementById('theme-toggle-moon-desktop');
+            const toggleSunMobile = document.getElementById('theme-toggle-sun-mobile');
+            const toggleMoonMobile = document.getElementById('theme-toggle-moon-mobile');
+
+
+            if (document.documentElement.classList.contains('dark')) {
+                toggleSun.classList.add("hidden");
+                toggleSunDesktop.classList.add("hidden");
+                toggleSunMobile.classList.add("hidden");
+
+                toggleMoon.classList.remove("hidden");
+                toggleMoonDesktop.classList.remove("hidden");
+                toggleMoonMobile.classList.remove("hidden");
+            } else {
+                toggleMoon.classList.add("hidden");
+                toggleMoonDesktop.classList.add("hidden");
+                toggleMoonMobile.classList.add("hidden");
+
+                toggleSun.classList.remove("hidden");
+                toggleSunDesktop.classList.remove("hidden");
+                toggleSunMobile.classList.remove("hidden");
+            }
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            const hideClasses = ['invisible', 'opacity-0', '-translate-y-full', 'sm:translate-x-full'];
+            const showClasses = ['opacity-100', 'translate-y-0', 'sm:translate-x-0'];
+
+            hideClasses.forEach(cls => mobileMenu.classList.toggle(cls));
+            showClasses.forEach(cls => mobileMenu.classList.toggle(cls));
+        }
+    </script>
+</head>
+
+<body class="bg-white dark:bg-slate-800 transition-colors duration-300">
+<!-- Header -->
+<header class="fixed top-0 left-0 w-full bg-white dark:bg-slate-800 shadow-sm z-50">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8" aria-label="Global">
+        <!-- Logo -->
+        <div class="flex lg:flex-1">
+            <a href="#" class="-m-1.5 p-1.5">
+                <span class="sr-only">Your Company</span>
+                <img class="h-8 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
+                     alt="Logo">
+            </a>
+        </div>
+
+        <!-- 移动端菜单按钮和主题切换按钮 -->
+        <div class="flex items-center lg:hidden">
+            <!-- 主题切换按钮 -->
+            <button onclick="toggleTheme()"
+                    class="mr-2 p-2 bg-gray-200 dark:bg-gray-700 rounded transition-transform duration-200 hover:scale-105">
+                <a id="theme-toggle-sun">
+                    <i class="fa-regular fa-sun"></i>
+                </a>
+                <a id="theme-toggle-moon" class="text-white">
+                    <i class="fa-regular fa-moon"></i>
+                </a>
+            </button>
+            <!-- 菜单按钮 -->
+            <button type="button" onclick="toggleMobileMenu()"
+                    class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-300 transition-transform duration-200 hover:scale-105">
+                <span class="sr-only">打开主菜单</span>
+                <!-- 菜单图标 -->
+                <svg class="h-6 w-6 transition-transform duration-200" fill="none" viewBox="0 0 24 24"
+                     stroke-width="1.5"
+                     stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- 导航链接（桌面端） -->
+        <div class="hidden lg:flex lg:gap-x-12">
+            <a href="#"
+               class="text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-200 hover:text-indigo-500 dark:hover:text-indigo-400">Features</a>
+            <a href="#"
+               class="text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-200 hover:text-indigo-500 dark:hover:text-indigo-400">Marketplace</a>
+            <a href="#"
+               class="text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-200 hover:text-indigo-500 dark:hover:text-indigo-400">Company</a>
+        </div>
+
+        <!-- 右侧登录按钮和主题切换按钮（桌面端） -->
+        <div class="hidden lg:flex lg:flex-1 lg:justify-end items-center">
+            <button onclick="toggleTheme()"
+                    class="mr-6 p-2 bg-gray-200 dark:bg-gray-700 rounded transition-transform duration-200 hover:scale-105">
+                <a id="theme-toggle-sun-desktop">
+                    <i class="fa-regular fa-sun"></i>
+                </a>
+                <a id="theme-toggle-moon-desktop" class="text-white">
+                    <i class="fa-regular fa-moon"></i>
+                </a>
+            </button>
+            <a href="#"
+               class="text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-200 hover:text-indigo-500 dark:hover:text-indigo-400">Log
+                in <span aria-hidden="true">&rarr;</span></a>
+        </div>
+    </nav>
+    <div id="mobile-menu"
+         class="lg:hidden fixed inset-0 z-50 invisible opacity-0 -translate-y-full sm:-translate-y-0 sm:translate-x-full transition-all duration-300 ease-out h-screen"
+         role="dialog" aria-modal="true">
+        <!-- 背景遮罩 -->
+        <div class="fixed inset-0 z-10 bg-black bg-opacity-30 transition-opacity duration-300"
+             onclick="toggleMobileMenu()"></div>
+
+        <div
+                class="relative z-20 bg-white dark:bg-slate-800 px-4 py-4 h-full overflow-y-auto ring-1 ring-gray-900/10 dark:ring-slate-600 sm:max-w-sm sm:ms-auto">
+            <div class="flex items-center justify-between">
+                <a href="#" class="-m-1.5 p-1.5">
+                    <span class="sr-only">Your Company</span>
+                    <img class="h-8 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
+                         alt="Logo">
+                </a>
+                <div class="flex items-center">
+                    <!-- 主题切换按钮 -->
+                    <button onclick="toggleTheme()"
+                            class="mr-2 p-2 bg-gray-200 dark:bg-gray-700 rounded transition-transform duration-200 hover:scale-105">
+
+                        <a id="theme-toggle-sun-mobile">
+                            <i class="fa-regular fa-sun"></i>
+                        </a>
+                        <a id="theme-toggle-moon-mobile" class="text-white">
+                            <i class="fa-regular fa-moon"></i>
+                        </a>
+                    </button>
+                    <!-- 关闭菜单按钮 -->
+                    <button type="button" onclick="toggleMobileMenu()"
+                            class="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-300 transition-transform duration-200 hover:scale-105">
+                        <span class="sr-only">关闭菜单</span>
+                        <svg class="h-6 w-6 transition-transform duration-200" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5"
+                             stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-6 flow-root">
+                <div class="-my-6 divide-y divide-gray-500/10 dark:divide-slate-600">
+                    <div class="space-y-2 py-6">
+                        <!-- 其他导航链接 -->
+                        <a href="#"
+                           class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors duration-200">Features</a>
+                        <a href="#"
+                           class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors duration-200">Marketplace</a>
+                        <a href="#"
+                           class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors duration-200">Company</a>
+                    </div>
+                    <!-- 登录按钮 -->
+                    <div class="py-6">
+                        <a href="#"
+                           class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors duration-200">Log
+                            in</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- 主内容，添加顶部内边距以避免被固定 header 覆盖 -->
+<main class="pt-20 p-4">
+    <div class="bg-white dark:bg-slate-700 rounded-lg px-6 py-8 ring-1 ring-slate-900/5 shadow-xl mt-4 text-slate-900 dark:text-white">
+        <h2 class="text-xl font-semibold tracking-tight">
+            111111
+        </h2>
+        <div class="mt-6 text-base">
+            2222
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>
